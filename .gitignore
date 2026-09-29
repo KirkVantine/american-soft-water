@@ -1,0 +1,5 @@
+# Local tooling
+.claude/
+
+# Original downloads from the old Wix site (optimized copies live in assets/img)
+assets/source/
