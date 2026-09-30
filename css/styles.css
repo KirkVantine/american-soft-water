@@ -137,7 +137,14 @@ ul, ol { margin: 0; padding: 0; }
 .hero__photo img { width: 100%; aspect-ratio: 562 / 744; object-fit: cover; border-radius: 180px 180px 0 0; }
 .hero__photo figcaption { position: absolute; left: 16px; right: 16px; bottom: 76px; padding: 10px 14px; background: rgba(10, 31, 51, .82); color: #fff; font-size: var(--fs-sm); border-radius: var(--radius); }
 
-.hero__waterline { position: absolute; left: 0; bottom: -1px; width: 100%; height: clamp(48px, 7vw, 90px); z-index: 2; }
+/* Moving waterline: each layer is 200% wide with a wave that repeats every half,
+   so sliding it -50% loops seamlessly. Different speeds and directions read as water. */
+.hero__water { position: absolute; left: 0; right: 0; bottom: -1px; height: clamp(64px, 9vw, 120px); overflow: hidden; z-index: 2; pointer-events: none; }
+.wave { position: absolute; left: 0; bottom: 0; width: 200%; height: 100%; animation: wave-drift linear infinite; will-change: transform; }
+.wave--back  { fill: #5E9FD2; opacity: .45; animation-duration: 28s; }
+.wave--mid   { fill: var(--blue); opacity: .7; animation-duration: 19s; animation-direction: reverse; }
+.wave--front { fill: var(--navy); animation-duration: 36s; }
+@keyframes wave-drift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ---------- Proof strip ---------- */
 .proof { background: var(--navy); color: var(--on-navy); padding: 8px 0 48px; }
@@ -392,5 +399,6 @@ ul, ol { margin: 0; padding: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .wave { animation: none; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
