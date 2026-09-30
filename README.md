@@ -8,7 +8,8 @@ css/styles.css        all styles; design tokens at the top
 js/main.js            mobile nav, "What's your water doing?" finder, booking form
 assets/img/           optimized photos from the old Wix site (letterbox bars cropped)
 assets/source/        untouched originals downloaded from americansoftwater.com
-assets/logo/          redrawn mark, horizontal lockup, 400×400 social profile (SVG + PNG)
+assets/logo/          original drop-and-flag mark (transparent PNG, 512/1024/favicon),
+                      horizontal lockup and 400×400 social profile (SVG + PNG)
 ```
 
 ## Before launch
