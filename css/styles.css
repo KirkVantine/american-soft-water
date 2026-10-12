@@ -177,7 +177,7 @@ ul, ol { margin: 0; padding: 0; }
 .result--empty { display: grid; place-items: center; gap: 16px; min-height: 360px; padding: 40px; background: transparent; border: 1.5px dashed rgba(255,255,255,.3); color: var(--on-navy-muted); text-align: center; }
 .result__mark { width: 72px; height: 72px; opacity: .7; }
 .result[hidden] { display: none; }
-.result__photo { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.result__photo { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: 50% 25%; }
 .result__body { padding: 24px 28px 28px; }
 .result__cause { font-size: var(--fs-sm); color: var(--muted); }
 .result__cause strong { color: var(--red); }
@@ -203,6 +203,7 @@ ul, ol { margin: 0; padding: 0; }
 .system--flip .system__photo { order: 2; }
 .system__photo { margin: 0; }
 .system__photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); }
+.system__photo--top img { object-position: 50% 18%; }
 .system__body { max-width: 36rem; }
 .system__body > p { margin-top: 14px; color: var(--muted); }
 .ticks { list-style: none; margin-top: 20px; display: grid; gap: 8px; }

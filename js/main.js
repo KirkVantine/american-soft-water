@@ -29,11 +29,11 @@
   };
 
   const SYSTEMS = {
-    softener:  { name: "Water softener", href: "#softeners", img: "assets/img/install-twin-black.jpg",
+    softener:  { name: "Water softener", href: "#softeners", img: "assets/img/install-twin-tank.jpg",
                  alt: "Twin-tank water softener installation",
                  text: "Removes the minerals that cause scale, spotty dishes, and dry skin. It also handles light iron." },
-    iron:      { name: "Air-injection iron & sulfur filter", href: "#iron-filters", img: "assets/img/install-well.jpg",
-                 alt: "Filter system installed beside a well pressure tank",
+    iron:      { name: "Air-injection iron & sulfur filter", href: "#iron-filters", img: "assets/img/install-iron-softener-well.jpg",
+                 alt: "Iron filter and softener installed side by side",
                  text: "Oxidizes iron and hydrogen sulfide so they’re filtered out before they stain or smell." },
     ro:        { name: "Reverse osmosis drinking water", href: "#reverse-osmosis", img: "assets/img/install-ro.jpg",
                  alt: "Reverse osmosis unit under a kitchen sink",
