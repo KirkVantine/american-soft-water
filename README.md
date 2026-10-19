@@ -1,11 +1,12 @@
 # American Soft Water LLC website
 
-Static one-page site (HTML/CSS/JS, no build step) served by a **Cloudflare Worker** with static assets, plus one small API route for the water test form. Same setup as MyCleaners (`wrangler.jsonc` + `worker/` + `public/`); the form backend is the New Beginnings one, adapted.
+Static one-page site (HTML/CSS/JS, no build step) served by a **Cloudflare Worker** with static assets, plus two small API routes: the water test form and Google reviews. Same setup as MyCleaners (`wrangler.jsonc` + `worker/` + `public/`); the form backend is the New Beginnings one, adapted.
 
 ```
 wrangler.jsonc            Worker config: name, ./public as assets, worker/index.ts as main
-worker/index.ts           routes POST /api/inquiry; everything else is a static file
+worker/index.ts           routes /api/inquiry and /api/reviews; everything else is a static file
 worker/inquiry.ts         emails water test requests to Dan through Resend
+worker/reviews.ts         Dan's Google rating and reviews from the Places API, cached 6 hours
 public/                   the static site
   index.html              the site
   404.html                shown (with a real 404) for unknown URLs
@@ -38,6 +39,14 @@ Until the key exists, or if Resend fails, the endpoint returns an error and **th
 
 The sender address only works once `americansoftwater.com` is verified in Resend (step 5 below). Until then, delivery fails and the email fallback takes over.
 
+## Google reviews
+
+`worker/reviews.ts` (`GET /api/reviews`) asks the Google Places API (New) for the listing's rating, review count and up to 5 reviews, keeps the 4 and 5 star ones with real text, and caches the answer for 6 hours. `public/js/main.js` puts the longest Google review in the large quote and the next ones beside it; the built-in Nextdoor and Yelp quotes fill any empty slots and stay as the fallback if Google doesn't answer.
+
+Needs a runtime secret **`GOOGLE_PLACES_KEY`** (Google Cloud API key with "Places API (New)" enabled; the MyCleaners key works). Optional `PLACE_ID` var skips the name lookup. With the cache, usage is a few calls a day, well inside Google's free monthly allowance.
+
+Google's terms: reviewer name and profile link, "Google review" credit, no storing review text beyond 30 days (the 6-hour cache is fine).
+
 ## Going live (done October 2026)
 
 DNS moves to Cloudflare (free plan), because a Worker can only take over `americansoftwater.com` when Cloudflare runs the domain's DNS. The domain itself stays registered at Squarespace.
@@ -61,5 +70,4 @@ The domain is registered at Squarespace (formerly Google Domains), registered 20
 
 ## Still open
 
-- **Google reviews:** paste real review text into `#reviews` (see the comment there). Current quotes are word for word from Nextdoor and Yelp and labeled with their source.
 - **Photo of Dan or the van** for the About section.

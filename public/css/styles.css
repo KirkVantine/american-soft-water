@@ -95,6 +95,7 @@ ul, ol { margin: 0; padding: 0; }
 .stars { display: inline-flex; gap: 2px; color: #E8A317; }
 .stars svg { width: 18px; height: 18px; fill: currentColor; stroke: none; }
 .stars--lg svg { width: 26px; height: 26px; }
+.stars svg.is-empty { opacity: .3; }
 
 /* ---------- Top bar & header ---------- */
 .topbar { background: var(--navy-deep); color: var(--on-navy); font-size: var(--fs-sm); }
@@ -227,6 +228,7 @@ ul, ol { margin: 0; padding: 0; }
 .review p { font-family: var(--serif); font-style: italic; font-size: var(--fs-md); line-height: 1.6; }
 .review footer { margin-top: 14px; font-size: var(--fs-sm); color: #DCEAF6; }
 .review cite { font-style: normal; font-weight: 700; color: #fff; }
+.review cite a { color: inherit; text-decoration-color: rgba(255,255,255,.5); }
 .review__src { display: block; margin-top: 2px; }
 .review--feature { padding-right: 16px; }
 .review--feature p { font-size: clamp(1.4rem, 1.1rem + 1.1vw, 1.95rem); line-height: 1.45; }

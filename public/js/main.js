@@ -50,7 +50,7 @@
   const empty = document.getElementById("finder-empty");
   const output = document.getElementById("finder-output");
 
-  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   function renderFinder() {
     const picked = chips.filter((c) => c.checked).map((c) => c.value);
@@ -208,6 +208,54 @@
         submit.textContent = submitLabel;
       }
     });
+  }
+
+  /* ---------- Google reviews (via /api/reviews, worker/reviews.ts) ---------- */
+  // The page ships with real Nextdoor and Yelp quotes. When Google answers, its
+  // reviews take the featured spot and the column beside it; built-in quotes
+  // fill any column slots Google doesn't. Any failure leaves the page as built.
+  const reviewsBox = document.querySelector("[data-reviews]");
+  if (reviewsBox) {
+    fetch("/api/reviews", { headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data) return;
+        if (data.rating) {
+          document.querySelector("[data-rating]").textContent = Number(data.rating).toFixed(1);
+          const full = Math.round(data.rating);
+          document.querySelectorAll("[data-stars] svg").forEach((s, i) => s.classList.toggle("is-empty", i >= full));
+        }
+        if (data.count) {
+          document.querySelector("[data-review-count]").textContent =
+            `Google rating, ${data.count} review${data.count === 1 ? "" : "s"}`;
+        }
+        if (data.mapsUri) document.querySelector("[data-reviews-link]").href = data.mapsUri;
+        if (data.writeReviewUri) document.querySelector("[data-write-review]").href = data.writeReviewUri;
+
+        const google = Array.isArray(data.reviews) ? data.reviews : [];
+        if (!google.length) return; // keep the built-in quotes
+
+        const card = (r, feature) => {
+          const name = r.uri
+            ? `<a href="${esc(r.uri)}" target="_blank" rel="noopener">${esc(r.name)}</a>`
+            : esc(r.name);
+          return `<blockquote class="review${feature ? " review--feature" : ""}" data-source="Google">
+            <p>${esc(r.text)}</p>
+            <footer><cite>${name}</cite> <span class="review__src">Google review${r.when ? `, ${esc(r.when)}` : ""}</span></footer>
+          </blockquote>`;
+        };
+
+        // Longest review reads best as the large quote; the rest keep Google's newest-first order.
+        const lead = google.reduce((a, b) => (b.text.length > a.text.length ? b : a));
+        const rest = google.filter((r) => r !== lead).slice(0, 3);
+        const builtIn = Array.from(reviewsBox.querySelectorAll("[data-reviews-stack] .review"))
+          .slice(0, Math.max(0, 3 - rest.length))
+          .map((el) => el.outerHTML);
+
+        reviewsBox.innerHTML = card(lead, true)
+          + `<div class="reviews__stack" data-reviews-stack>${rest.map((r) => card(r, false)).join("")}${builtIn.join("")}</div>`;
+      })
+      .catch(() => { /* offline or not configured: the built-in quotes stay */ });
   }
 
   const year = document.getElementById("year");
