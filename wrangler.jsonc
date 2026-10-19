@@ -14,9 +14,15 @@
     // Unknown URLs get public/404.html with a real 404 status.
     "not_found_handling": "404-page"
   },
-  // The workers.dev address is the preview until americansoftwater.com points
-  // here. Set this to false after cutover so it can't compete in search.
-  "workers_dev": true
+  // Live on americansoftwater.com. Listed here so every deploy keeps them
+  // attached; a Cloudflare Redirect Rule sends the bare domain to www.
+  "routes": [
+    { "pattern": "www.americansoftwater.com", "custom_domain": true },
+    { "pattern": "americansoftwater.com", "custom_domain": true }
+  ],
+  // The workers.dev address is off so it can't compete in search results.
+  "workers_dev": false,
+  "preview_urls": false
   // Secret, set in the dashboard or with `npx wrangler secret put RESEND_API_KEY`.
   // Optional vars INQUIRY_TO / INQUIRY_FROM: see worker/inquiry.ts.
 }

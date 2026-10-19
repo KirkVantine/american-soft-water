@@ -18,7 +18,6 @@ public/                   the static site
   _headers                security headers, asset caching
   robots.txt, sitemap.xml
 source/                   original photos, not committed (gitignored)
-.github/workflows/        temporary: keeps the github.io preview alive until cutover
 ```
 
 After editing CSS or JS, bump the `?v=` number on their links in `index.html` so browsers pick up the change.
@@ -39,7 +38,7 @@ Until the key exists, or if Resend fails, the endpoint returns an error and **th
 
 The sender address only works once `americansoftwater.com` is verified in Resend (step 5 below). Until then, delivery fails and the email fallback takes over.
 
-## Going live
+## Going live (done October 2026)
 
 DNS moves to Cloudflare (free plan), because a Worker can only take over `americansoftwater.com` when Cloudflare runs the domain's DNS. The domain itself stays registered at Squarespace.
 
