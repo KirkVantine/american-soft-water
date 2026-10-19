@@ -16,6 +16,6 @@ assets/logo/          original drop-and-flag mark (transparent PNG, 512/1024/fav
 
 - **Google reviews**: add the real Google review text in the `#reviews` section (see the comment in `index.html`). Reviews on the page now are real, word for word, from Nextdoor and Yelp and are labeled with their source.
 - **Form delivery**: the booking form opens the visitor's email app (mailto). To receive submissions directly, point the form at Formspree, Netlify Forms, or similar.
-- **Confirm facts**: hours (Google/Yelp say M–F 8–6, Sat 9–3; the old site said M–F 8–5, Sat 9–1), and which phone is primary (734-878-2572 is on Google; 734-845-6494 is on Nextdoor and the old site header).
+- **Confirmed by Dan (Oct 2026)**: hours Mon–Fri 8–5, Sat 9–1. Main number 734-878-2572 (business line, takes texts, forwards to his cell).
 - **Photos of Dan or the van** would strengthen the About section. None were available publicly.
 - Bump the `?v=` number on the CSS/JS links in `index.html` after edits so browsers pick up changes.
