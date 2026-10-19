@@ -1,4 +1,4 @@
-// Cloudflare Pages Function backing the free water test form on the home page.
+// The free water test form's backend. worker/index.ts routes POST /api/inquiry here.
 //
 // POST /api/inquiry  ->  { ok: true } | { ok: false, error: <code> }
 //
@@ -9,8 +9,8 @@
 // ---------------------------------------------------------------------------
 // CONFIGURATION
 // ---------------------------------------------------------------------------
-// Set in Cloudflare (Workers & Pages -> the project -> Settings -> Variables
-// and Secrets), for Production:
+// Set in Cloudflare (Workers & Pages -> american-soft-water -> Settings ->
+// Variables and Secrets), or with `npx wrangler secret put RESEND_API_KEY`:
 //
 //   RESEND_API_KEY   required, as a secret. Without it this returns 503 and the
 //                    form falls back to a pre-filled email.
@@ -20,7 +20,7 @@
 //                    resend.dev only delivers to the Resend account owner, so it
 //                    must never be the fallback here.
 
-interface Env {
+export interface Env {
   RESEND_API_KEY?: string;
   INQUIRY_TO?: string;
   INQUIRY_FROM?: string;
@@ -32,7 +32,7 @@ const DEFAULT_FROM = 'American Soft Water Website <website@americansoftwater.com
 /** Caps that are generous for a real person and useless for a spam run. */
 const LIMITS = { name: 80, phone: 40, email: 200, address: 200, city: 80, source: 40, current: 200, problem: 60, message: 2000 };
 
-const json = (body: unknown, status = 200) =>
+export const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
@@ -48,7 +48,7 @@ const cleanText = (v: FormDataEntryValue | null, max: number) =>
     ? v.replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, ' ').trim().slice(0, max)
     : '';
 
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+export async function inquiry(request: Request, env: Env): Promise<Response> {
   let form: FormData;
   try {
     form = await request.formData();
@@ -150,10 +150,4 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   return json({ ok: true });
-};
-
-/** Anything other than POST gets a clear answer rather than a Pages 404. */
-export const onRequest: PagesFunction<Env> = async (ctx) => {
-  if (ctx.request.method === 'POST') return onRequestPost(ctx);
-  return json({ ok: false, error: 'method_not_allowed' }, 405);
-};
+}

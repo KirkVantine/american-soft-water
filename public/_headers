@@ -1,15 +1,10 @@
-# Cloudflare Pages response headers.
+# Response headers for the static files (Cloudflare Workers static assets).
 
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: SAMEORIGIN
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-
-# The project's own *.pages.dev address must never compete with
-# americansoftwater.com in search results.
-https://:project.pages.dev/*
-  X-Robots-Tag: noindex
 
 # Images, styles and scripts rarely change; the ?v= query on the CSS/JS links
 # in index.html busts the cache when they do.

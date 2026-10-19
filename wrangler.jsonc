@@ -1,0 +1,22 @@
+{
+  // Cloudflare Worker serving ./public, plus /api/inquiry (see worker/index.ts),
+  // which emails water test requests to Dan through Resend.
+  //
+  // Pairs with these Cloudflare build settings (Settings -> Build):
+  //   Build command:  (empty)
+  //   Deploy command: npx wrangler deploy
+  "name": "american-soft-water",
+  "compatibility_date": "2026-10-01",
+  "main": "worker/index.ts",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // Unknown URLs get public/404.html with a real 404 status.
+    "not_found_handling": "404-page"
+  },
+  // The workers.dev address is the preview until americansoftwater.com points
+  // here. Set this to false after cutover so it can't compete in search.
+  "workers_dev": true
+  // Secret, set in the dashboard or with `npx wrangler secret put RESEND_API_KEY`.
+  // Optional vars INQUIRY_TO / INQUIRY_FROM: see worker/inquiry.ts.
+}

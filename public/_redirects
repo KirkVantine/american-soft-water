@@ -1,4 +1,4 @@
-# Cloudflare Pages redirect table.
+# Redirect table for the static files (Cloudflare Workers static assets).
 #
 # The old Wix site had a page per topic. Search results and bookmarks that
 # still point at them land on the matching section of the new one-page site

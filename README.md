@@ -1,19 +1,22 @@
 # American Soft Water LLC website
 
-Static one-page site (HTML/CSS/JS, no build step) hosted on **Cloudflare Pages**, with one Pages Function for the water test form. Same setup as the New Beginnings site.
+Static one-page site (HTML/CSS/JS, no build step) served by a **Cloudflare Worker** with static assets, plus one small API route for the water test form. Same setup as MyCleaners (`wrangler.jsonc` + `worker/` + `public/`); the form backend is the New Beginnings one, adapted.
 
 ```
-public/                   everything Cloudflare publishes
+wrangler.jsonc            Worker config: name, ./public as assets, worker/index.ts as main
+worker/index.ts           routes POST /api/inquiry; everything else is a static file
+worker/inquiry.ts         emails water test requests to Dan through Resend
+public/                   the static site
   index.html              the site
+  404.html                shown (with a real 404) for unknown URLs
   css/styles.css          all styles; design tokens at the top
   js/main.js              mobile nav, "What's your water doing?" finder, form
   assets/img/             optimized install photos (Dan's and the old Wix site's)
   assets/logo/            original drop-and-flag mark (transparent PNG, 512/1024/favicon),
                           horizontal lockup and 400×400 social profile (SVG + PNG)
   _redirects              old Wix page URLs -> matching section (301)
-  _headers                security headers; noindex on the *.pages.dev address
+  _headers                security headers, asset caching
   robots.txt, sitemap.xml
-functions/api/inquiry.ts  POST /api/inquiry -> emails Dan through Resend
 source/                   original photos, not committed (gitignored)
 .github/workflows/        temporary: keeps the github.io preview alive until cutover
 ```
@@ -22,9 +25,9 @@ After editing CSS or JS, bump the `?v=` number on their links in `index.html` so
 
 ## The water test form
 
-`public/index.html` (`#test-form`) → `public/js/main.js` → `functions/api/inquiry.ts` → Resend → **americansoftwater@gmail.com**.
+`public/index.html` (`#test-form`) → `public/js/main.js` → `worker/inquiry.ts` → Resend → **americansoftwater@gmail.com**.
 
-Set these in Cloudflare (Workers & Pages → the project → Settings → Variables and Secrets, Production):
+Set these in Cloudflare (Workers & Pages → american-soft-water → Settings → Variables and Secrets), or `npx wrangler secret put RESEND_API_KEY`:
 
 | Variable | |
 |---|---|
@@ -38,14 +41,14 @@ The sender address only works once `americansoftwater.com` is verified in Resend
 
 ## Going live
 
-Same path as New Beginnings: DNS moves to Cloudflare (free plan), because Pages can only serve the bare `americansoftwater.com` when Cloudflare runs the domain's DNS. The domain itself stays registered at Squarespace.
+DNS moves to Cloudflare (free plan), because a Worker can only take over `americansoftwater.com` when Cloudflare runs the domain's DNS. The domain itself stays registered at Squarespace.
 
-1. **Cloudflare Pages:** Workers & Pages → Create → Pages → Connect to Git → `KirkVantine/american-soft-water`. Framework preset: None. Build command: empty. Build output directory: `public`. Add the variables above. Check the `*.pages.dev` address works.
-2. **Add the domain to Cloudflare:** Add a site → `americansoftwater.com` → Free. On the review screen, delete the imported Wix records (the `A` records on `@` and the `www` CNAME). There is no email on this domain, so nothing else needs keeping.
+1. **Worker:** Workers & Pages → `american-soft-water` (connected to `KirkVantine/american-soft-water`). Settings → Build: build command empty, deploy command `npx wrangler deploy`. Add the `RESEND_API_KEY` secret. Check the `american-soft-water.<account>.workers.dev` address.
+2. **Add the domain to Cloudflare:** Add a domain → `americansoftwater.com` → Free. On the review screen, delete the imported Wix records (the `A` records on `@` and the `www` CNAME). There is no email on this domain, so nothing else needs keeping.
 3. **Squarespace Domains:** DNS → Domain Nameservers → use custom nameservers → paste the two Cloudflare gives you (replacing `ns10/ns11.wixdns.net`).
-4. **Attach the domain:** Pages project → Custom domains → add `www.americansoftwater.com` and `americansoftwater.com`. Cloudflare creates the records and the certificate. Make the bare domain redirect to `www` (a Redirect Rule, or Bulk Redirects).
-5. **Resend:** add domain `americansoftwater.com`; with DNS on Cloudflare, Resend can add its records automatically, or add them by hand in Cloudflare DNS. Then send a test request through the live form.
-6. **Code:** remove the `<meta name="robots" content="noindex, nofollow">` line from `public/index.html`.
+4. **Attach the domain** once Cloudflare shows the domain Active: Worker → Settings → Domains & Routes → Add → Custom domain → `www.americansoftwater.com`, then again for `americansoftwater.com`. Then in the domain's Rules → Redirect Rules, send `americansoftwater.com` to `https://www.americansoftwater.com` (301, keep the path).
+5. **Resend:** add domain `americansoftwater.com`; with DNS on Cloudflare, Resend can add its records automatically. Then send a test request through the live form.
+6. **Code:** remove the `<meta name="robots" content="noindex, nofollow">` line from `public/index.html`, and set `"workers_dev": false` in `wrangler.jsonc`.
 7. **After it's confirmed live:** delete `.github/workflows/pages.yml` and turn off GitHub Pages; export anything needed from Wix, disconnect the domain there, and cancel the Wix plan.
 
 The domain is registered at Squarespace (formerly Google Domains), registered 2019-12-05, renews 2027-12-05.
