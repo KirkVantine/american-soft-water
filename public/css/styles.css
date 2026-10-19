@@ -38,6 +38,8 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+/* Components set display (grid, flex), which would otherwise beat the hidden attribute. */
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
@@ -301,6 +303,12 @@ ul, ol { margin: 0; padding: 0; }
 .checks label { display: flex; align-items: center; gap: 10px; min-height: 40px; font-weight: 500; cursor: pointer; }
 .checks input { width: 20px; height: 20px; min-height: 0; padding: 0; accent-color: var(--blue); flex: none; }
 .form__note { font-size: var(--fs-sm); color: var(--muted); }
+/* Honeypot: off-screen rather than display:none, which some bots skip. */
+.form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form--done { align-content: start; border-color: var(--blue); }
+.form--done h3 { font-size: var(--fs-lg); color: var(--navy); }
+.form--done p { color: var(--muted); }
+.form--done:focus { outline: none; }
 .form__status { font-weight: 700; color: var(--blue); }
 .form__status:empty { display: none; }
 .form__error-summary { padding: 14px 16px; border: 2px solid var(--red); border-radius: var(--radius); color: var(--red-dark); font-weight: 600; }

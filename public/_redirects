@@ -1,0 +1,35 @@
+# Cloudflare Pages redirect table.
+#
+# The old Wix site had a page per topic. Search results and bookmarks that
+# still point at them land on the matching section of the new one-page site
+# instead of a 404. 301, because those URLs are never coming back.
+#
+# Every target is "/" (plus an anchor), and no rule below can match "/", so
+# none of these can loop. Keep it that way when adding rules.
+
+/water-softener      /#softeners        301
+/water-softener/     /#softeners        301
+/iron-filters        /#iron-filters     301
+/iron-filters/       /#iron-filters     301
+/reverse-osmosis     /#reverse-osmosis  301
+/reverse-osmosis/    /#reverse-osmosis  301
+/water-filtration    /#filtration       301
+/water-filtration/   /#filtration       301
+/free-water-test     /#water-test       301
+/free-water-test/    /#water-test       301
+/contact-us          /#water-test       301
+/contact-us/         /#water-test       301
+/gallery             /#installs         301
+/gallery/            /#installs         301
+
+# Wix store and blog pages. There is no store or blog on the new site.
+/shop                /                  301
+/shop/               /                  301
+/products-1          /                  301
+/products-1/         /                  301
+/blog                /                  301
+/blog/               /                  301
+/product-page/*      /                  301
+/blog/*              /                  301
+/post/*              /                  301
+/category/*          /                  301

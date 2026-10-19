@@ -1,5 +1,9 @@
 # Local tooling
 .claude/
+.wrangler/
+node_modules/
+.dev.vars
 
-# Original downloads from the old Wix site (optimized copies live in assets/img)
-assets/source/
+# Original photos (old Wix site downloads, Dan's phone pictures). Optimized
+# copies that the site actually uses live in public/assets/img.
+source/

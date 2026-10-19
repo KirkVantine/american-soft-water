@@ -100,6 +100,32 @@
     const summary = document.getElementById("form-errors");
     const status = document.getElementById("form-status");
 
+    const done = document.getElementById("test-done");
+    const submit = document.getElementById("f-submit");
+    const submitLabel = submit.textContent;
+    // Stamped on load so the server can tell a person from a script that posts instantly.
+    document.getElementById("f-started").value = String(Date.now());
+
+    /** Everything they typed, as a pre-filled email. Used when the server can't deliver. */
+    function mailtoFallback(data) {
+      const val = (k) => (data.get(k) || "").toString().trim();
+      const name = [val("first"), val("last")].filter(Boolean).join(" ");
+      const lines = [
+        `Name: ${name}`,
+        `Phone: ${val("phone")}`,
+        `Email: ${val("email") || "-"}`,
+        `Address: ${[val("address"), val("city")].filter(Boolean).join(", ") || "-"}`,
+        `Water source: ${val("source") || "Not sure"}`,
+        `Current treatment: ${val("current") || "-"}`,
+        `Problems: ${data.getAll("problems").join(", ") || "Not specified"}`,
+        "",
+        val("message")
+      ];
+      window.location.href = `mailto:${form.dataset.to}`
+        + "?subject=" + encodeURIComponent(`Free water test request: ${name}`)
+        + "&body=" + encodeURIComponent(lines.join("\n"));
+    }
+
     const rules = [
       { id: "f-first", test: (v) => v.trim().length > 0, msg: "Enter your first name." },
       { id: "f-phone", test: (v) => v.replace(/\D/g, "").length >= 10, msg: "Enter a 10-digit phone number so Dan can call you back." },
@@ -127,7 +153,7 @@
       });
     });
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       status.textContent = "";
       const failed = rules.filter((r) => {
@@ -148,25 +174,39 @@
       summary.hidden = true;
 
       const data = new FormData(form);
-      const val = (k) => (data.get(k) || "").toString().trim();
-      const problems = data.getAll("problems").join(", ") || "Not specified";
-      const name = [val("first"), val("last")].filter(Boolean).join(" ");
-      const lines = [
-        `Name: ${name}`,
-        `Phone: ${val("phone")}`,
-        `Email: ${val("email") || "-"}`,
-        `Address: ${[val("address"), val("city")].filter(Boolean).join(", ") || "-"}`,
-        `Water source: ${val("source") || "Not sure"}`,
-        `Current treatment: ${val("current") || "-"}`,
-        `Problems: ${problems}`,
-        "",
-        val("message")
-      ];
-      const href = "mailto:americansoftwater@gmail.com"
-        + "?subject=" + encodeURIComponent(`Free water test request: ${name}`)
-        + "&body=" + encodeURIComponent(lines.join("\n"));
-      window.location.href = href;
-      status.textContent = "Your email app should open with the request ready to send. If it doesn’t, call 734-878-2572.";
+      try {
+        submit.disabled = true;
+        submit.textContent = "Sending…";
+        const res = await fetch(form.action, {
+          method: "POST",
+          body: data,
+          headers: { accept: "application/json" }
+        });
+        const out = await res.json().catch(() => ({ ok: false }));
+
+        if (out.ok) {
+          form.hidden = true;
+          done.hidden = false;
+          done.focus({ preventScroll: true });
+          done.scrollIntoView({ block: "center" });
+          return;
+        }
+        if (out.error === "bad_email" || out.error === "bad_phone") {
+          const rule = rules.find((r) => r.id === (out.error === "bad_email" ? "f-email" : "f-phone"));
+          setError(document.getElementById(rule.id), rule.msg);
+          document.getElementById(rule.id).focus();
+          return;
+        }
+        // Delivery not set up yet, or it failed: hand the visitor a ready-to-send email.
+        status.textContent = "Opening your email app with your request filled in. If it doesn’t open, call or text 734-878-2572.";
+        setTimeout(() => mailtoFallback(data), 900);
+      } catch {
+        status.textContent = "Couldn’t send that. Opening your email app with your request filled in. If it doesn’t open, call or text 734-878-2572.";
+        setTimeout(() => mailtoFallback(data), 900);
+      } finally {
+        submit.disabled = false;
+        submit.textContent = submitLabel;
+      }
     });
   }
 

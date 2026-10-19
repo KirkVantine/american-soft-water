@@ -7,15 +7,17 @@
   <meta name="description" content="Water softeners, iron filters, and reverse osmosis systems installed by Dan, a retired firefighter/paramedic treating Livingston, Washtenaw, and Oakland County water since 2000. Free water testing.">
   <!-- Draft: remove this noindex line when the site goes live on americansoftwater.com -->
   <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://www.americansoftwater.com/">
   <link rel="icon" href="assets/logo/favicon-64.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/logo/mark.png">
   <meta property="og:title" content="American Soft Water LLC">
   <meta property="og:description" content="Honest water treatment in Pinckney, MI. Free water testing, softeners, iron filters, and reverse osmosis.">
-  <meta property="og:image" content="assets/img/install-iron-softener-blue.jpg">
+  <meta property="og:image" content="https://www.americansoftwater.com/assets/img/install-iron-softener-blue.jpg">
+  <meta property="og:url" content="https://www.americansoftwater.com/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=6">
+  <link rel="stylesheet" href="css/styles.css?v=8">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -285,7 +287,7 @@
     </section>
 
     <!-- INSTALL GALLERY -->
-    <section class="installs" aria-labelledby="installs-title">
+    <section class="installs" id="installs" aria-labelledby="installs-title">
       <div class="wrap">
         <header class="section-head section-head--row">
           <h2 id="installs-title">Recent installs</h2>
@@ -341,7 +343,8 @@
           </table>
         </div>
 
-        <form class="form" id="test-form" novalidate>
+        <div class="booking__panel">
+        <form class="form" id="test-form" action="/api/inquiry" method="post" data-to="americansoftwater@gmail.com" novalidate>
           <div class="form__error-summary" id="form-errors" tabindex="-1" hidden></div>
           <div class="form__row">
             <div class="field">
@@ -407,10 +410,22 @@
             <label for="f-message">Anything else?</label>
             <textarea id="f-message" name="message" rows="4"></textarea>
           </div>
-          <button class="btn btn--red btn--lg btn--block" type="submit">Send my water test request</button>
-          <p class="form__note">This opens your email app with your request filled in. Nothing is sent until you hit send.</p>
+          <!-- Bots fill in every field they find. This one is hidden from people and screen readers. -->
+          <div class="form__hp" aria-hidden="true">
+            <label for="f-company">Company</label>
+            <input id="f-company" name="company" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <input type="hidden" name="t" id="f-started" value="">
+          <button class="btn btn--red btn--lg btn--block" type="submit" id="f-submit">Send my water test request</button>
+          <p class="form__note">Dan gets this by email and will call or text you to set a time.</p>
           <p class="form__status" id="form-status" role="status"></p>
         </form>
+        <div class="form form--done" id="test-done" tabindex="-1" hidden>
+          <h3>Request sent</h3>
+          <p>Dan will call or text you to set a time for your free water test.</p>
+          <p>Need him sooner? Call or text <a href="tel:+17348782572">734-878-2572</a>.</p>
+        </div>
+        </div>
       </div>
     </section>
 
@@ -487,6 +502,6 @@
     <a class="btn btn--red" href="#water-test">Free water test</a>
   </div>
 
-  <script src="js/main.js?v=6" defer></script>
+  <script src="js/main.js?v=8" defer></script>
 </body>
 </html>
