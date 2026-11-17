@@ -29,19 +29,19 @@
   };
 
   const SYSTEMS = {
-    softener:  { name: "Water softener", href: "#softeners", img: "assets/img/install-twin-tank.jpg",
+    softener:  { name: "Water softener", href: "/water-softener", img: "/assets/img/install-twin-tank.jpg",
                  alt: "Twin-tank water softener installation",
                  text: "Removes the minerals that cause scale, spotty dishes, and dry skin. It also handles light iron." },
-    iron:      { name: "Air-injection iron & sulfur filter", href: "#iron-filters", img: "assets/img/install-iron-softener-well.jpg",
+    iron:      { name: "Air-injection iron & sulfur filter", href: "/iron-filters", img: "/assets/img/install-iron-softener-well.jpg",
                  alt: "Iron filter and softener installed side by side",
                  text: "Oxidizes iron and hydrogen sulfide so they’re filtered out before they stain or smell." },
-    ro:        { name: "Reverse osmosis drinking water", href: "#reverse-osmosis", img: "assets/img/install-ro.jpg",
+    ro:        { name: "Reverse osmosis drinking water", href: "/reverse-osmosis", img: "/assets/img/install-ro.jpg",
                  alt: "Reverse osmosis unit under a kitchen sink",
                  text: "A multi-stage system for the kitchen faucet that reduces lead, arsenic, nitrates, and chlorine taste." },
-    carbon:    { name: "Whole-house carbon filter", href: "#filtration", img: "assets/img/install-prefilter.jpg",
+    carbon:    { name: "Whole-house carbon filter", href: "/water-filtration", img: "/assets/img/install-prefilter.jpg",
                  alt: "Whole-house filter plumbed into a basement water line",
                  text: "Takes chlorine taste and smell out of every tap in the house, not just the kitchen." },
-    prefilter: { name: "Sediment pre-filter", href: "#filtration", img: "assets/img/install-prefilter.jpg",
+    prefilter: { name: "Sediment pre-filter", href: "/water-filtration", img: "/assets/img/install-prefilter.jpg",
                  alt: "Sediment pre-filter ahead of a water softener",
                  text: "Catches sand and grit before they reach your fixtures and softener." }
   };

@@ -1,6 +1,6 @@
 # American Soft Water LLC website
 
-Static one-page site (HTML/CSS/JS, no build step) served by a **Cloudflare Worker** with static assets, plus two small API routes: the water test form and Google reviews. Same setup as MyCleaners (`wrangler.jsonc` + `worker/` + `public/`); the form backend is the New Beginnings one, adapted.
+Static site (HTML/CSS/JS, no build step on Cloudflare): a homepage plus five service pages served by a **Cloudflare Worker** with static assets, plus two small API routes: the water test form and Google reviews. Same setup as MyCleaners (`wrangler.jsonc` + `worker/` + `public/`); the form backend is the New Beginnings one, adapted.
 
 ```
 wrangler.jsonc            Worker config: name, ./public as assets, worker/index.ts as main
@@ -8,7 +8,9 @@ worker/index.ts           routes /api/inquiry and /api/reviews; everything else 
 worker/inquiry.ts         emails water test requests to Dan through Resend
 worker/reviews.ts         Dan's Google rating and reviews from the Places API, cached 6 hours
 public/                   the static site
-  index.html              the site
+  index.html              homepage; holds the shared header, sprite, form and footer (@shared markers)
+  water-softener.html,    service pages at the old Wix addresses (/water-softener, /iron-filters,
+  iron-filters.html, ...  /reverse-osmosis, /water-filtration, /free-water-test). GENERATED, don't edit.
   404.html                shown (with a real 404) for unknown URLs
   css/styles.css          all styles; design tokens at the top
   js/main.js              mobile nav, "What's your water doing?" finder, form
@@ -18,10 +20,16 @@ public/                   the static site
   _redirects              old Wix page URLs -> matching section (301)
   _headers                security headers, asset caching
   robots.txt, sitemap.xml
+tools/build_pages.py      builds the service pages and sitemap.xml from index.html + the content in the script
 source/                   original photos, not committed (gitignored)
 ```
 
-After editing CSS or JS, bump the `?v=` number on their links in `index.html` so browsers pick up the change.
+## Editing
+
+- **Service page content:** edit `PAGES` in `tools/build_pages.py`, then run `python tools/build_pages.py`.
+- **Header, nav, form or footer:** edit them in `public/index.html` (between the `<!-- @shared:... -->` markers), then run `python tools/build_pages.py` so the service pages match.
+- **After editing CSS or JS:** bump the `?v=` number in `index.html` and `CSS_V` / `JS_V` in the build script, then rebuild.
+- Commit the generated `.html` files and `sitemap.xml`; Cloudflare doesn't run the script.
 
 ## The water test form
 

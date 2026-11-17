@@ -1,24 +1,16 @@
 # Redirect table for the static files (Cloudflare Workers static assets).
 #
-# The old Wix site had a page per topic. Search results and bookmarks that
-# still point at them land on the matching section of the new one-page site
-# instead of a 404. 301, because those URLs are never coming back.
+# Old Wix addresses that have no page of their own on the new site get a 301
+# to the closest match, so bookmarks and search results don't hit a 404.
 #
-# Every target is "/" (plus an anchor), and no rule below can match "/", so
-# none of these can loop. Keep it that way when adding rules.
+# No target below can match its own rule, so none of these can loop. Keep it
+# that way when adding rules.
 
-/water-softener      /#softeners        301
-/water-softener/     /#softeners        301
-/iron-filters        /#iron-filters     301
-/iron-filters/       /#iron-filters     301
-/reverse-osmosis     /#reverse-osmosis  301
-/reverse-osmosis/    /#reverse-osmosis  301
-/water-filtration    /#filtration       301
-/water-filtration/   /#filtration       301
-/free-water-test     /#water-test       301
-/free-water-test/    /#water-test       301
-/contact-us          /#water-test       301
-/contact-us/         /#water-test       301
+# The service pages (/water-softener, /iron-filters, /reverse-osmosis,
+# /water-filtration, /free-water-test) are real pages again, at the same
+# addresses the Wix site used, so they are not redirected.
+/contact-us          /free-water-test   301
+/contact-us/         /free-water-test   301
 /gallery             /#installs         301
 /gallery/            /#installs         301
 
