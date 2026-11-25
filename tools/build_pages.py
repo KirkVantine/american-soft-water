@@ -23,8 +23,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 SITE = "https://www.americansoftwater.com"
-CSS_V = "10"
-JS_V = "10"
+CSS_V = "11"
+JS_V = "11"
 
 home = (PUBLIC / "index.html").read_text(encoding="utf-8")
 

@@ -19,8 +19,15 @@
 //                    only works once that domain is verified in Resend.
 //                    resend.dev only delivers to the Resend account owner, so it
 //                    must never be the fallback here.
+//   TURNSTILE_SECRET optional, as a secret. Cloudflare Turnstile secret key for
+//                    the bot check in worker/screen.ts.
+//
+// Nothing here drops a submission. Spam and sales pitches are tagged in the
+// subject by worker/screen.ts and still delivered; see the rule there.
 
-export interface Env {
+import { screen, type ScreenEnv } from './screen';
+
+export interface Env extends ScreenEnv {
   RESEND_API_KEY?: string;
   INQUIRY_TO?: string;
   INQUIRY_FROM?: string;
@@ -56,14 +63,6 @@ export async function inquiry(request: Request, env: Env): Promise<Response> {
     return json({ ok: false, error: 'bad_request' }, 400);
   }
 
-  // Honeypot. Real people never see this field, so anything in it is a bot.
-  // Answer 200 so the bot believes it succeeded and does not retry.
-  if (clean(form.get('company'), 100)) return json({ ok: true });
-
-  // Bots submit instantly. Nobody fills in a name and phone in under 3 seconds.
-  const started = Number(form.get('t') || 0);
-  if (started && Date.now() - started < 3000) return json({ ok: true });
-
   const first = clean(form.get('first'), LIMITS.name);
   const last = clean(form.get('last'), LIMITS.name);
   const phone = clean(form.get('phone'), LIMITS.phone);
@@ -97,10 +96,31 @@ export async function inquiry(request: Request, env: Env): Promise<Response> {
     return json({ ok: false, error: 'not_configured' }, 503);
   }
 
+  const verdict = await screen(
+    {
+      honeypot: clean(form.get('company'), 100),
+      startedMs: Number(form.get('t') || 0),
+      turnstileToken: clean(form.get('cf-turnstile-response'), 2048),
+      problems,
+      address,
+      city,
+      message,
+    },
+    env,
+    request.headers.get('cf-connecting-ip') ?? '',
+  );
+
   const name = [first, last].filter(Boolean).join(' ');
   const where = [address, city].filter(Boolean).join(', ');
 
   const body = [
+    ...(verdict.tag
+      ? [
+          `${verdict.tag.slice(1, -1)}: ${verdict.reasons.join('; ')}.`,
+          'The website tagged this automatically. It was still delivered, never blocked. If it is a real customer, just reply or call as usual.',
+          '',
+        ]
+      : []),
     'A free water test was requested through the website.',
     '',
     `Name:     ${name}`,
@@ -133,7 +153,7 @@ export async function inquiry(request: Request, env: Env): Promise<Response> {
               .filter(Boolean)
           : DEFAULT_TO,
         ...(email ? { reply_to: email } : {}),
-        subject: `Water test request: ${name}${city ? ` (${city})` : ''}`,
+        subject: `${verdict.tag ? `${verdict.tag} ` : ''}Water test request: ${name}${city ? ` (${city})` : ''}`,
         text: body,
       }),
     });

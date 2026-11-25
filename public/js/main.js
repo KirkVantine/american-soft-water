@@ -106,6 +106,29 @@
     // Stamped on load so the server can tell a person from a script that posts instantly.
     document.getElementById("f-started").value = String(Date.now());
 
+    // Cloudflare Turnstile. Loaded only when a site key is set on the form. It adds a
+    // cf-turnstile-response field that worker/screen.ts checks to label likely spam;
+    // the form never waits on it, so a slow or blocked script can't stop a request.
+    const sitekey = form.dataset.turnstileSitekey;
+    const slot = document.getElementById("f-turnstile");
+    if (sitekey && slot) {
+      window.onTurnstileLoad = () => {
+        try {
+          window.turnstile.render(slot, {
+            sitekey,
+            appearance: "interaction-only",
+            size: "flexible",
+            "refresh-expired": "auto"
+          });
+        } catch { /* no bot check: the request is still sent */ }
+      };
+      const s = document.createElement("script");
+      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad";
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+
     /** Everything they typed, as a pre-filled email. Used when the server can't deliver. */
     function mailtoFallback(data) {
       const val = (k) => (data.get(k) || "").toString().trim();

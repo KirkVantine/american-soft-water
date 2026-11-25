@@ -308,6 +308,7 @@ ul, ol { margin: 0; padding: 0; }
 .checks input { width: 20px; height: 20px; min-height: 0; padding: 0; accent-color: var(--blue); flex: none; }
 .form__note { font-size: var(--fs-sm); color: var(--muted); }
 /* Honeypot: off-screen rather than display:none, which some bots skip. */
+.form__turnstile:empty { display: none; }
 .form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .form--done { align-content: start; border-color: var(--blue); }
 .form--done h3 { font-size: var(--fs-lg); color: var(--navy); }

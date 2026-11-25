@@ -6,6 +6,7 @@ Static site (HTML/CSS/JS, no build step on Cloudflare): a homepage plus five ser
 wrangler.jsonc            Worker config: name, ./public as assets, worker/index.ts as main
 worker/index.ts           routes /api/inquiry and /api/reviews; everything else is a static file
 worker/inquiry.ts         emails water test requests to Dan through Resend
+worker/screen.ts          tags likely spam and sales pitches in the subject (never blocks)
 worker/reviews.ts         Dan's Google rating and reviews from the Places API, cached 6 hours
 public/                   the static site
   index.html              homepage; holds the shared header, sprite, form and footer (@shared markers)
@@ -43,9 +44,20 @@ Set these in Cloudflare (Workers & Pages → american-soft-water → Settings �
 | `INQUIRY_TO` | Optional, comma-separated. Defaults to americansoftwater@gmail.com. |
 | `INQUIRY_FROM` | Optional. Defaults to `website@americansoftwater.com`; must be on a domain verified in Resend. |
 
-Until the key exists, or if Resend fails, the endpoint returns an error and **the page opens the visitor's email app with everything they typed**, so no request is lost. Spam handling is a hidden honeypot field plus a 3-second minimum fill time; both answer `200` so bots don't retry. Nothing is stored or logged except Resend's own error text.
+Until the key exists, or if Resend fails, the endpoint returns an error and **the page opens the visitor's email app with everything they typed**, so no request is lost.
 
 The sender address only works once `americansoftwater.com` is verified in Resend (step 5 below). Until then, delivery fails and the email fallback takes over.
+
+## Spam and sales pitches (never blocked)
+
+**Rule from Kirk, 2026-11-24: no submission is ever blocked or limited.** Every request with a name and phone number reaches Dan. `worker/screen.ts` only adds a subject tag and a "why" line:
+
+- `[Flagged: likely spam]` — a hidden honeypot field filled in, sent within 3 seconds, or Cloudflare Turnstile didn't confirm a real browser, **and** no water problem checked and no address given.
+- `[Flagged: sales pitch]` — the message mentions SEO, marketing, web design and similar, or contains a link, **and** no water problem is checked.
+
+Anyone who checks a water problem is never tagged as a pitch. Dan's Gmail has a filter on `subject:"[Flagged"` that skips the inbox and applies a label, so tagged mail is moved, not lost.
+
+**Turnstile** (Cloudflare's invisible bot check) is optional. Set the site key in `data-turnstile-sitekey` on `#test-form` in `index.html` (then run the build script), and the secret as the Worker secret `TURNSTILE_SECRET`. With either missing, the check is skipped and nothing is tagged for it. If the script fails to load, the form still sends.
 
 ## Google reviews
 
