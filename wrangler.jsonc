@@ -25,6 +25,9 @@
   ],
   // The workers.dev address is off so it can't compete in search results.
   "workers_dev": false,
+  // Worker logs (dashboard -> Observability). The code logs only error codes and
+  // Resend's error text, never form contents.
+  "observability": { "enabled": true },
   "preview_urls": false
   // Secret, set in the dashboard or with `npx wrangler secret put RESEND_API_KEY`.
   // Optional vars INQUIRY_TO / INQUIRY_FROM: see worker/inquiry.ts.

@@ -69,6 +69,8 @@ async function turnstilePassed(env: ScreenEnv, token: string, ip: string): Promi
       body: new URLSearchParams({ secret: env.TURNSTILE_SECRET, response: token, ...(ip ? { remoteip: ip } : {}) }),
     });
     const out: any = await res.json();
+    // Cloudflare's own error codes only (e.g. invalid-input-secret), never the token.
+    if (!out?.success) console.warn('turnstile siteverify failed:', JSON.stringify(out?.['error-codes'] ?? []));
     return Boolean(out?.success);
   } catch {
     return null; // Cloudflare unreachable: no opinion, never a reason to flag
