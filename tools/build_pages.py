@@ -23,8 +23,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 SITE = "https://www.americansoftwater.com"
-CSS_V = "11"
-JS_V = "11"
+CSS_V = "12"
+JS_V = "12"
 
 home = (PUBLIC / "index.html").read_text(encoding="utf-8")
 
@@ -59,8 +59,8 @@ PAGES = [
     {
         "slug": "water-softener",
         "nav": "Water softeners",
-        "title": "Water Softeners in Pinckney & Livingston County, MI | American Soft Water",
-        "description": "Water softener installation, repair and salt delivery in Pinckney and Livingston County. Free in-home water test first, then a single-tank, twin-tank or refurbished softener sized for your water.",
+        "title": "Water Softeners in Pinckney & Livingston County, MI",
+        "description": "Water softener installation, repair and salt delivery in Pinckney and Livingston County. Free in-home water test first, then a system sized for your water.",
         "h1": "Water softeners for Pinckney and Livingston County homes",
         "lede": "Hard water leaves scale in your pipes, water heater and dishwasher, and makes soap work harder. Dan tests your water first, then sizes and programs a softener for your home, whether you’re on a private well or city water.",
         "hero": ("install-twin-tank.jpg", 900, 1187, "Twin-tank water softener with the American Soft Water sticker, brine tank and sediment pre-filter"),
@@ -111,8 +111,8 @@ PAGES = [
     {
         "slug": "iron-filters",
         "nav": "Iron & sulfur filters",
-        "title": "Iron & Sulfur Filters for Well Water in Livingston County, MI | American Soft Water",
-        "description": "Air-injection iron filters that remove rust stains and rotten-egg smell from well water in Pinckney and Livingston County. Free in-home water test, installation and service.",
+        "title": "Iron Filters for Well Water | Livingston County, MI",
+        "description": "Air-injection iron filters that stop rust stains and the rotten-egg smell in well water around Pinckney and Livingston County. Free in-home water test.",
         "h1": "Iron and sulfur filters for well water",
         "lede": "Orange stains in the sink, a metallic taste, or water that smells like rotten eggs are signs of iron and hydrogen sulfide, which are common in private wells around Pinckney. An iron filter takes them out before they reach your fixtures, your laundry or your softener.",
         "hero": ("install-iron-softener-well.jpg", 900, 1469, "Iron filter and water softener side by side, each with its own digital valve, next to a pre-filter and well pressure tank"),
@@ -162,8 +162,8 @@ PAGES = [
     {
         "slug": "reverse-osmosis",
         "nav": "Reverse osmosis",
-        "title": "Reverse Osmosis Drinking Water Systems in Pinckney, MI | American Soft Water",
-        "description": "Under-sink reverse osmosis systems that reduce lead, arsenic, nitrates and chlorine taste in your drinking water. Installed and serviced around Pinckney and Livingston County. Free water test.",
+        "title": "Reverse Osmosis Drinking Water | Pinckney, MI",
+        "description": "Under-sink reverse osmosis that reduces lead, arsenic, nitrates and chlorine taste in drinking water. Installed around Pinckney. Free in-home water test.",
         "h1": "Reverse osmosis drinking water systems",
         "lede": "A reverse osmosis (RO) system sits under your kitchen sink and gives you clean drinking water from its own faucet. It’s the most thorough option for the water you drink and cook with.",
         "hero": ("install-ro.jpg", 1000, 999, "PuROMax four-stage reverse osmosis unit and white storage tank under a kitchen sink"),
@@ -204,8 +204,8 @@ PAGES = [
     {
         "slug": "water-filtration",
         "nav": "Whole-house filtration",
-        "title": "Whole-House Water Filtration in Pinckney, MI | American Soft Water",
-        "description": "Sediment pre-filters, carbon filters for chlorine and arsenic removal units for homes in Pinckney and Livingston County. Free water test, installation and service.",
+        "title": "Whole-House Water Filtration | Pinckney, MI",
+        "description": "Sediment pre-filters, carbon filters for chlorine, and arsenic removal units for homes in Pinckney and Livingston County. Free in-home water test.",
         "h1": "Whole-house water filtration",
         "lede": "Some things a softener isn’t built to remove. A whole-house filter catches sand, grit and chlorine before they reach the rest of your plumbing, so every tap in the house gets cleaner water.",
         "hero": ("install-prefilter.jpg", 562, 744, "Sediment pre-filter plumbed ahead of a water softener in a basement"),
@@ -241,8 +241,8 @@ PAGES = [
     {
         "slug": "free-water-test",
         "nav": "Free water test",
-        "title": "Free In-Home Water Testing in Pinckney & Livingston County | American Soft Water",
-        "description": "Book a free in-home water test in Pinckney, Livingston, Washtenaw or Oakland County. Dan tests for hardness, iron, sulfur and more, explains the results, and there’s no obligation to buy.",
+        "title": "Free In-Home Water Testing | Pinckney, MI",
+        "description": "Book a free in-home water test in Pinckney or anywhere in Livingston, Washtenaw or Oakland County. Dan explains the results, with no obligation to buy.",
         "h1": "Free water testing at your home",
         "lede": "Dan comes to your home, tests your water and tells you what he finds. There’s no charge and no obligation to buy anything. Sometimes the answer is that your water, or the system you already have, is fine.",
         "hero": ("install-iron-softener-blue.jpg", 562, 744, "Blue iron filter and softener tanks with lit digital valves"),
